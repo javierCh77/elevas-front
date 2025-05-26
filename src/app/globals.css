@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto:wght@400;500;700&family=Google+Sans:wght@400;500;700&display=swap');
+
+:root {
+  --background: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* Elige una de las siguientes fuentes para --font-sans: */
+ /* --font-sans: 'Google Sans', sans-serif; /* Opción 1: Google Sans */
+  /* --font-sans: 'Roboto', sans-serif;    /* Opción 2: Roboto */
+   --font-sans: 'Inter', sans-serif;     /* Opción 3: Inter */
+ /* --font-mono: var(--font-geist-mono);*/
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #ffffff;
+    --foreground: #3f3e3e;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}

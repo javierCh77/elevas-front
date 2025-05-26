@@ -1,0 +1,53 @@
+{
+  "turnosHoy": 32,
+  "pacientesNuevos": 12,
+  "obrasSocialesActivas": 8,
+  "profesionalesActivos": 15,
+
+  "turnosPorServicio": [
+    { "servicio": "Odontología", "cantidad": 14 },
+    { "servicio": "Pediatría", "cantidad": 9 },
+    { "servicio": "Clínica Médica", "cantidad": 6 },
+    { "servicio": "Oftalmología", "cantidad": 3 }
+  ],
+
+  "turnosPorDia": [
+    { "fecha": "2024-05-01", "cantidad": 20 },
+    { "fecha": "2024-05-02", "cantidad": 25 },
+    { "fecha": "2024-05-03", "cantidad": 18 },
+    { "fecha": "2024-05-04", "cantidad": 30 },
+    { "fecha": "2024-05-05", "cantidad": 15 }
+  ],
+
+  "obraSocialMasUsada": {
+    "nombre": "OSDE",
+    "cantidad": 22
+  },
+
+  "ultimosTurnos": [
+    {
+      "paciente": "Ana Gómez",
+      "fecha": "2024-05-05",
+      "hora": "10:00",
+      "servicio": "Odontología"
+    },
+    {
+      "paciente": "Luis Pérez",
+      "fecha": "2024-05-05",
+      "hora": "10:30",
+      "servicio": "Clínica Médica"
+    },
+    {
+      "paciente": "Marta Díaz",
+      "fecha": "2024-05-05",
+      "hora": "11:00",
+      "servicio": "Pediatría"
+    }
+  ],
+
+  "topProfesionales": [
+    { "nombre": "Dra. Martínez", "consultas": 18 },
+    { "nombre": "Dr. López", "consultas": 15 },
+    { "nombre": "Dra. Ruiz", "consultas": 12 }
+  ]
+}
