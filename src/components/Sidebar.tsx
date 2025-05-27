@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import { Home, LogOut, ChevronLeft, ChevronRight, Factory, Waypoints, ContactRound, Handshake, CalendarDays, FileStack, ChartLine, BookUser, MessageSquareQuote, Speech,} from "lucide-react";
+import { Home, LogOut, ChevronLeft, ChevronRight, Factory, Waypoints, ContactRound, Handshake, CalendarDays, FileStack, ChartLine, BookUser, MessageSquareQuote, Speech, PersonStanding,} from "lucide-react";
 import { useState } from "react";
 import clsx from "clsx";
 
@@ -27,6 +27,7 @@ export default function Sidebar() {
     { label: "Inicio", icon: <Home size={20} />, href: "/dashboard" },
     { label: "Administracion", icon: <Waypoints size={20} />, href: "/dashboard/administracion" },
     { label: "Empresas", icon: <Factory size={20} />, href: "/dashboard/empresas" },
+    { label: "Empleados", icon: <PersonStanding size={20} />, href: "/dashboard/empleados" },
     { label: "Reclutamiento", icon: <ContactRound size={20} />, href: "/dashboard/reclutamiento" },
     { label: "Calendario", icon: <CalendarDays size={20} />, href: "/dashboard/calendario" },
     { label: "Documentacion", icon: <FileStack size={20} />, href: "/dashboard/documentacion" },
