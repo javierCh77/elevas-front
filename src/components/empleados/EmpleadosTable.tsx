@@ -3,6 +3,7 @@
 import { Empleado } from "@/types/empleado";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 
+
 interface Props {
   empleados: Empleado[];
   onEdit: (empleado: Empleado) => void;
@@ -21,6 +22,7 @@ export default function EmpleadoTable({ empleados, onEdit, onDelete, onView }: P
             <th className="p-2">DNI</th>
             <th className="p-2">Teléfono</th>
             <th className="p-2">Email</th>
+            <th className="p-2">Empresa</th>
             <th className="p-2 text-right">Acciones</th>
           </tr>
         </thead>
@@ -32,6 +34,7 @@ export default function EmpleadoTable({ empleados, onEdit, onDelete, onView }: P
               <td className="p-2">{empleado.dni}</td>
               <td className="p-2">{empleado.telefono}</td>
               <td className="p-2">{empleado.email}</td>
+              <td className="p-2">{empleado.empresa?.nombre ?? "Sin empresa"}</td>
               <td className="p-2 text-right flex justify-end gap-2">
                 <button onClick={() => onView(empleado)} className="text-[#1f5d89] hover:text-[#33589a]">
                   <Eye size={18} />

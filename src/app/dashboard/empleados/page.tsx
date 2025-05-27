@@ -104,7 +104,7 @@ export default function EmpleadosPage() {
   return (
     <div className="p-2">
       <div className="flex items-center gap-2">
-        <Users color="#33589a" />
+        <Users color="#9b8444" />
         <h2 className="text-2xl font-bold">Empleados</h2>
       </div>
 

@@ -92,7 +92,7 @@ export default function EmpresasPage() {
   return (
     <div className="p-2">
       <div className="flex items-center gap-2">
-        <Factory color="#6c5435" />
+        <Factory color="#9b8444" />
         <h2 className="text-2xl font-bold text-[#322616]">Empresas</h2>
       </div>
 
@@ -100,7 +100,7 @@ export default function EmpresasPage() {
         <input
           type="text"
           placeholder="Buscar empresa..."
-          className="border border-[#BCB563] bg-[#EEEED7] text-[#322616] px-3 py-1 rounded w-full max-w-sm placeholder:text-[#9B8444]"
+          className="border px-3 py-1 rounded w-full max-w-sm"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />

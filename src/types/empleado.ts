@@ -1,3 +1,5 @@
+import { Empresa } from "./empresa";
+
 export interface Empleado {
   id: string;
   nombre: string;
@@ -8,7 +10,8 @@ export interface Empleado {
   direccion: string;
   imagenPerfil?: string;
   empresaId: string;
-
+  empresa?: Empresa; // 👈 asociación completa
+ 
 }
 
 export interface EmpleadoInput {
@@ -20,4 +23,5 @@ export interface EmpleadoInput {
   direccion: string;
   imagenPerfil: File | null;
   empresaId: string;
+  empresa?: Empresa; 
 }
