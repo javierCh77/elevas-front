@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import api from "@/lib/api"; // Ajustá si tu cliente está en otra ruta
 
 interface EventoInput {
   titulo: string;
@@ -10,6 +11,12 @@ interface EventoInput {
   fechaFin: string;
   descripcion?: string;
   empleadoId?: string;
+}
+
+interface Empleado {
+  id: string;
+  nombre: string;
+  apellido: string;
 }
 
 interface Props {
@@ -32,11 +39,6 @@ const TIPO_EVENTOS = [
   { value: "otro", label: "Otro" },
 ];
 
-const EMPLEADOS_FAKE = [
-  { id: "1", nombre: "Ana González" },
-  { id: "2", nombre: "Carlos Pérez" },
-];
-
 export default function EventoRRHHModal({ open, onClose, onSave }: Props) {
   const [form, setForm] = useState<EventoInput>({
     titulo: "",
@@ -46,6 +48,8 @@ export default function EventoRRHHModal({ open, onClose, onSave }: Props) {
     descripcion: "",
     empleadoId: "",
   });
+
+  const [empleados, setEmpleados] = useState<Empleado[]>([]);
 
   useEffect(() => {
     if (open) {
@@ -57,10 +61,19 @@ export default function EventoRRHHModal({ open, onClose, onSave }: Props) {
         descripcion: "",
         empleadoId: "",
       });
+
+      api
+        .get("/empleados")
+        .then((res) => setEmpleados(res.data))
+        .catch((err) => {
+          console.error("Error al cargar empleados", err);
+        });
     }
   }, [open]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
@@ -80,32 +93,18 @@ export default function EventoRRHHModal({ open, onClose, onSave }: Props) {
   return (
     <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
       <div className="bg-white rounded-xl p-6 w-full max-w-2xl relative">
-        <button className="absolute top-4 right-4 text-gray-500 hover:text-red-600" onClick={onClose}>
-          <X />
-        </button>
-
-        <h2 className="text-xl font-semibold mb-4 text-[#322616]">Nuevo evento RRHH</h2>
+        <button className="absolute top-4 right-4 text-gray-500 hover:text-red-600"   onClick={onClose}> <X /> </button>
+        <h2 className="text-xl font-semibold mb-4 text-[#322616]">  Nuevo evento RRHH</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="text-sm font-medium text-gray-700">Título *</label>
-            <input
-              type="text"
-              name="titulo"
-              value={form.titulo}
-              onChange={handleChange}
-              className="border p-2 rounded w-full bg-[#EEEED7] border-[#BCB563]"
-            />
+            <input type="text" name="titulo" value={form.titulo}  onChange={handleChange} className="border p-2 rounded w-full bg-[#EEEED7] border-[#BCB563]"/>
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700">Tipo de evento *</label>
-            <select
-              name="tipo"
-              value={form.tipo}
-              onChange={handleChange}
-              className="border p-2 rounded w-full bg-[#EEEED7] border-[#BCB563]"
-            >
+            <label className="text-sm font-medium text-gray-700"> Tipo de evento * </label>
+            <select name="tipo"  value={form.tipo}  onChange={handleChange} className="border p-2 rounded w-full bg-[#EEEED7] border-[#BCB563]">
               <option value="">Seleccionar tipo</option>
               {TIPO_EVENTOS.map((tipo) => (
                 <option key={tipo.value} value={tipo.value}>
@@ -116,67 +115,38 @@ export default function EventoRRHHModal({ open, onClose, onSave }: Props) {
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700">Fecha inicio *</label>
-            <input
-              type="datetime-local"
-              name="fechaInicio"
-              value={form.fechaInicio}
-              onChange={handleChange}
-              className="border p-2 rounded w-full bg-[#EEEED7] border-[#BCB563]"
-            />
+            <label className="text-sm font-medium text-gray-700"> Fecha inicio * </label>
+            <input type="datetime-local"  name="fechaInicio" value={form.fechaInicio} onChange={handleChange}className="border p-2 rounded w-full bg-[#EEEED7] border-[#BCB563]"/>
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700">Fecha fin *</label>
-            <input
-              type="datetime-local"
-              name="fechaFin"
-              value={form.fechaFin}
-              onChange={handleChange}
-              className="border p-2 rounded w-full bg-[#EEEED7] border-[#BCB563]"
-            />
+            <label className="text-sm font-medium text-gray-700"> Fecha fin * </label>
+            <input type="datetime-local"  name="fechaFin" value={form.fechaFin} onChange={handleChange} className="border p-2 rounded w-full bg-[#EEEED7] border-[#BCB563]" />
           </div>
 
           <div className="md:col-span-2">
-            <label className="text-sm font-medium text-gray-700">Empleado relacionado (opcional)</label>
-            <select
-              name="empleadoId"
-              value={form.empleadoId}
-              onChange={handleChange}
-              className="border p-2 rounded w-full bg-[#EEEED7] border-[#BCB563]"
-            >
+            <label className="text-sm font-medium text-gray-700"> Empleado relacionado (opcional) </label>
+            <select  name="empleadoId" value={form.empleadoId}  onChange={handleChange} className="border p-2 rounded w-full bg-[#EEEED7] border-[#BCB563]">
               <option value="">Sin asignar</option>
-              {EMPLEADOS_FAKE.map((emp) => (
+              {empleados.map((emp) => (
                 <option key={emp.id} value={emp.id}>
-                  {emp.nombre}
+                  {emp.nombre} {emp.apellido}
                 </option>
               ))}
             </select>
           </div>
 
           <div className="md:col-span-2">
-            <label className="text-sm font-medium text-gray-700">Descripción</label>
-            <textarea
-              name="descripcion"
-              value={form.descripcion}
-              onChange={handleChange}
-              className="border p-2 rounded w-full bg-[#EEEED7] border-[#BCB563]"
-              rows={3}
-            />
+            <label className="text-sm font-medium text-gray-700"> Descripción </label>
+            <textarea  name="descripcion" value={form.descripcion}  onChange={handleChange} className="border p-2 rounded w-full bg-[#EEEED7] border-[#BCB563]" rows={3}/>
           </div>
         </div>
 
         <div className="flex justify-end mt-6 gap-2">
-          <button
-            className="px-4 py-2 bg-[#DBDBAC] hover:bg-[#C9C780] text-[#322616] rounded-lg"
-            onClick={onClose}
-          >
+          <button className="px-4 py-2 bg-[#DBDBAC] hover:bg-[#C9C780] text-[#322616] rounded-lg" onClick={onClose}>
             Cancelar
           </button>
-          <button
-            className="px-4 py-2 bg-[#9B8444] hover:bg-[#B1A14F] text-white rounded-lg"
-            onClick={handleSubmit}
-          >
+          <button  className="px-4 py-2 bg-[#9B8444] hover:bg-[#B1A14F] text-white rounded-lg" onClick={handleSubmit}>
             Guardar evento
           </button>
         </div>
