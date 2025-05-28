@@ -38,7 +38,7 @@ export default function EventoDetallePopover({
     <div
       ref={popoverRef}
       style={{ top: y + -200, left: x + 60 }}
-      className="absolute z-50 bg-white border border-[#BCB563] rounded-xl shadow-xl p-4 w-72 text-sm text-[#322616]"
+      className="absolute z-50 bg-white border border-[#BCB563] rounded-xl shadow-xl p-4 w-72 text-sm text-[#322616] "
     >
       <div className="font-semibold text-base mb-2">{title}</div>
       <div className="mb-1">
@@ -59,7 +59,7 @@ export default function EventoDetallePopover({
       </div>
       <button
         onClick={onClose}
-        className="mt-2 px-3 py-1 bg-[#DBDBAC] text-[#322616] rounded hover:bg-[#C9C780] text-xs"
+        className="mt-2 px-3 py-1 bg-[#DBDBAC] text-[#322616] rounded hover:bg-[#C9C780] text-xs cursor-pointer"
       >
         Cerrar
       </button>

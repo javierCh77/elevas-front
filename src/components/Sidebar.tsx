@@ -25,16 +25,16 @@ export default function Sidebar() {
 
   const links: SidebarLink[] = [
     { label: "Inicio", icon: <Home size={20} />, href: "/dashboard" },
-    { label: "Administracion", icon: <Waypoints size={20} />, href: "/dashboard/administracion" },
+    // { label: "Administracion", icon: <Waypoints size={20} />, href: "/dashboard/administracion" },
     { label: "Empresas", icon: <Factory size={20} />, href: "/dashboard/empresas" },
     { label: "Empleados", icon: <PersonStanding size={20} />, href: "/dashboard/empleados" },
-    { label: "Reclutamiento", icon: <ContactRound size={20} />, href: "/dashboard/reclutamiento" },
+    // { label: "Reclutamiento", icon: <ContactRound size={20} />, href: "/dashboard/reclutamiento" },
     { label: "Calendario", icon: <CalendarDays size={20} />, href: "/dashboard/calendario" },
-    { label: "Documentacion", icon: <FileStack size={20} />, href: "/dashboard/documentacion" },
-    { label: "Indicadores", icon: <ChartLine size={20} />, href: "/dashboard/indicadores" },
-    { label: "Clientes", icon: <BookUser size={20} />, href: "/dashboard/clientes" },
-    { label: "Comunicaciones", icon: <Speech size={20} />, href: "/dashboard/comunicaciones" },
-    { label: "Chat", icon: <MessageSquareQuote size={20} />, href: "/dashboard/chat" },
+    // { label: "Documentacion", icon: <FileStack size={20} />, href: "/dashboard/documentacion" },
+    // { label: "Indicadores", icon: <ChartLine size={20} />, href: "/dashboard/indicadores" },
+    // { label: "Clientes", icon: <BookUser size={20} />, href: "/dashboard/clientes" },
+    // { label: "Comunicaciones", icon: <Speech size={20} />, href: "/dashboard/comunicaciones" },
+    // { label: "Chat", icon: <MessageSquareQuote size={20} />, href: "/dashboard/chat" },
   ];
 
   return (
