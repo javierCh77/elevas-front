@@ -82,3 +82,11 @@ body {
   font-size: 0.75rem;
   font-weight: 500;
 }
+
+
+.input {
+  @apply border p-2 rounded w-full mb-2;
+}
+.btn {
+  @apply bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded;
+}

@@ -1,20 +1,12 @@
 "use client";
 
-import { Factory } from "lucide-react";
-
+import EncuestaForm from "@/components/encuesta/EncuestaForm";
 
 export default function EncuestasPage() {
-
-
-
   return (
-    <div className="p-2">
-      <div className="flex items-center gap-2">
-        <Factory color="#6c5435" />
-        <h2 className="text-2xl font-bold text-[#322616]">Encuestas</h2>
-      </div>
-
-      
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-4 text-center">Encuesta de Experiencia del Colaborador</h1>
+      <EncuestaForm />
     </div>
   );
 }
