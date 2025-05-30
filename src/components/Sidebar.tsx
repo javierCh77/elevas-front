@@ -86,11 +86,12 @@ export default function Sidebar() {
                 "mt-1": openServicios && !collapsed,
               })}>
                 <div className="flex flex-col space-y-1 text-sm ">
-                  <button onClick={() => { setOpenServicios(false); router.push("/dashboard/servicios/evaluaciones"); }} className="hover:text-[#9b8444] text-left py-2 cursor-pointer">Evaluaciones</button>
-                  <button onClick={() => { setOpenServicios(false); router.push("/dashboard/servicios/encuestas"); }} className="hover:text-[#9b8444] text-left py-2 cursor-pointer">Encuestas de clima</button>
-                  <button onClick={() => { setOpenServicios(false); router.push("/dashboard/servicios/capacitaciones"); }} className="hover:text-[#9b8444] text-left py-2 cursor-pointer">Capacitaciones</button>
+                  {/* <button onClick={() => { setOpenServicios(false); router.push("/dashboard/servicios/evaluaciones"); }} className="hover:text-[#9b8444] text-left py-2 cursor-pointer">Evaluaciones</button> */}
+                  <button onClick={() => { setOpenServicios(false); router.push("/dashboard/servicios/indicadores-encuestas"); }} className="hover:text-[#9b8444] text-left py-2 cursor-pointer">Indicadores encuestas
+                  </button>
+                  {/* <button onClick={() => { setOpenServicios(false); router.push("/dashboard/servicios/capacitaciones"); }} className="hover:text-[#9b8444] text-left py-2 cursor-pointer">Capacitaciones</button>
                   <button onClick={() => { setOpenServicios(false); router.push("/dashboard/servicios/diagnosticos"); }} className="hover:text-[#9b8444] text-left py-2 cursor-pointer">Diagnósticos</button>
-                  <button onClick={() => { setOpenServicios(false); router.push("/dashboard/servicios/coaching"); }} className="hover:text-[#9b8444] text-left py-2 cursor-pointer">Coaching / Mentoring</button>
+                  <button onClick={() => { setOpenServicios(false); router.push("/dashboard/servicios/coaching"); }} className="hover:text-[#9b8444] text-left py-2 cursor-pointer">Coaching / Mentoring</button> */}
                 </div>
               </div>
             </div>
