@@ -3,6 +3,12 @@
 
 :root {
   --background: #ffffff;
+  --tw-shadow-color: rgb(0 0 0 / 0.1); /* reemplaza oklch por rgb */
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-border-opacity: 1;
+
+  /* Evita uso de oklch por seguridad */
+  color-scheme: only light;
 }
 
 @theme inline {
@@ -90,3 +96,4 @@ body {
 .btn {
   @apply bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded;
 }
+

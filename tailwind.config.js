@@ -19,5 +19,8 @@ module.exports = {
       },
     },
   },
+  corePlugins: {
+    preflight: true, // mantener estilos base
+  },
   plugins: [],
 };
