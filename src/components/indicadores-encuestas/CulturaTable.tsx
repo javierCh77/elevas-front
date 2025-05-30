@@ -1,19 +1,19 @@
+// components/indicadores-encuestas/CulturaTable.tsx
+"use client";
+
 import { Info } from "lucide-react";
 
-// components/indicadores-encuestas/CulturaTable.tsx
-interface CulturaRow {
-  id: string;
-  colaborador: string;
-  cultura: string;
+interface CulturaTableProps {
+  respuestas: any[];
 }
 
-const datos: CulturaRow[] = [
-  { id: "1", colaborador: "Ana M.", cultura: "Colaborativa" },
-  { id: "2", colaborador: "Luis F.", cultura: "Tóxica" },
-  
-];
+export default function CulturaTable({ respuestas }: CulturaTableProps) {
+  const filas = respuestas.map((r, i) => ({
+    id: r.id || i.toString(),
+    colaborador: `${r.nombre} ${r.apellido.charAt(0)}.`,
+    cultura: r.respuestas.culturaUnaPalabra,
+  }));
 
-export default function CulturaTable() {
   return (
     <div className="bg-[#F8F8EE] rounded-2xl shadow-md p-4 overflow-x-auto">
       <h3 className="font-semibold text-lg mb-4 text-[#786530] flex items-center gap-2">
@@ -28,7 +28,7 @@ export default function CulturaTable() {
           </tr>
         </thead>
         <tbody>
-          {datos.map((row) => (
+          {filas.map((row) => (
             <tr key={row.id} className="border-b border-[#ECEED3] hover:bg-[#ECEED3]">
               <td className="py-2 px-4 text-[#58462B]">{row.colaborador}</td>
               <td className="py-2 px-4">
@@ -38,7 +38,7 @@ export default function CulturaTable() {
                       ? "Ambiente de apoyo, comunicación abierta y cooperación."
                       : row.cultura === "Tóxica"
                       ? "Ambiente negativo con tensiones, falta de confianza o comunicación."
-                      : "Percepción neutral o no categorizada."
+                      : "Percepción espontánea del colaborador."
                   }
                   className={`px-3 py-1 rounded-full text-sm font-medium cursor-default ${
                     row.cultura === "Colaborativa"

@@ -1,4 +1,6 @@
 // components/indicadores-encuestas/IndicadoresRadar.tsx
+"use client";
+
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -6,44 +8,79 @@ import {
   LineElement,
   Filler,
   Tooltip,
-  Legend
+  Legend,
 } from "chart.js";
 import { Radar } from "react-chartjs-2";
 
-ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
+ChartJS.register(
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Tooltip,
+  Legend
+);
 
-const dataRadar = {
-  labels: ["Clima", "Feedback", "Herramientas", "Desarrollo", "Cultura"],
-  datasets: [
-    {
-      label: "Evaluación por Dimensión",
-      data: [4.2, 3.7, 4.1, 3.5, 4.0],
-      backgroundColor: "rgba(190, 178, 65, 0.2)",
-      borderColor: "#AEA344",
-      pointBackgroundColor: "#AEA344",
-    },
-  ],
-};
+interface Props {
+  respuestas: any[];
+}
 
-const optionsRadar = {
-  responsive: true,
-  maintainAspectRatio: false,
-  scales: {
-    r: {
-      angleLines: {
-        display: false,
+export default function IndicadoresRadar({ respuestas }: Props) {
+  const calcularPromedio = (campo: string) => {
+    if (respuestas.length === 0) return 0;
+    const total = respuestas.reduce(
+      (sum, r) => sum + (r.respuestas?.[campo] || 0),
+      0
+    );
+    return +(total / respuestas.length).toFixed(1);
+  };
+
+  const data = {
+    labels: [
+      "Trabajo Valorado",
+      "Claridad de Objetivos",
+      "Recursos Disponibles",
+      "Feedback y Opinión",
+      "Desarrollo Profesional",
+    ],
+    datasets: [
+      {
+        label: "Resultados Promedio",
+        data: [
+          calcularPromedio("trabajoValorado"),
+          calcularPromedio("claridadObjetivos"),
+          calcularPromedio("recursosDisponibles"),
+          calcularPromedio("comodidadFeedback"),
+          calcularPromedio("oportunidadesDesarrollo"),
+        ],
+        backgroundColor: "rgba(174, 163, 68, 0.3)",
+        borderColor: "#AEA344",
+        pointBackgroundColor: "#AEA344",
+        pointBorderColor: "#fff",
       },
-      suggestedMin: 0,
-      suggestedMax: 5,
-    },
-  },
-};
+    ],
+  };
 
-export default function IndicadoresRadar() {
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      r: {
+        angleLines: { display: true },
+        suggestedMin: 0,
+        suggestedMax: 5,
+        ticks: {
+          stepSize: 1,
+          backdropColor: "transparent",
+        },
+      },
+    },
+  };
+
   return (
     <div className="bg-white p-4 rounded-2xl shadow-md" style={{ height: "350px" }}>
-      <h3 className="font-semibold text-lg text-gray-800 mb-4">Radar de Evaluación</h3>
-      <Radar data={dataRadar} options={optionsRadar} />
+      <h3 className="font-semibold text-lg text-gray-800 mb-4">Radar de Indicadores</h3>
+      <Radar data={data} options={options} />
     </div>
   );
 }
