@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { Users, UserRoundPlus, FileDown } from "lucide-react";
 import api from "@/lib/api";
 import toast from "react-hot-toast";
-
 import * as XLSX from "xlsx";
+
 import { Empleado, EmpleadoInput } from "@/types/empleado";
 import EmpleadoTable from "@/components/empleados/EmpleadosTable";
 import EmpleadoModal from "@/components/empleados/EmpleadosModal";
@@ -65,8 +65,17 @@ export default function EmpleadosPage() {
   };
 
   const handleEditEmpleado = (empleado: Empleado) => {
-    const { id, ...rest } = empleado;
-    setEmpleadoEnEdicion(rest);
+   const { id, ...rest } = empleado;
+
+const input: EmpleadoInput = {
+  ...rest,
+  imagenPerfil: null,
+  empresaId: empleado.empresaId,
+  empresa: empleado.empresa,
+};
+
+
+    setEmpleadoEnEdicion(input);
     setEditId(id);
     setIsEditing(true);
     setModalOpen(true);

@@ -14,7 +14,9 @@ import {
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin, { EventClickArg } from "@fullcalendar/interaction";
+import interactionPlugin from "@fullcalendar/interaction";
+import { EventClickArg } from "@fullcalendar/core";
+
 import esLocale from "@fullcalendar/core/locales/es";
 import toast from "react-hot-toast";
 import EventoDetallePopover from "@/components/calendario/EventoDetallePopover";
@@ -76,12 +78,14 @@ export default function CalendarioPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [eventos, setEventos] = useState<EventoVisual[]>([]);
   const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [popoverData, setPopoverData] = useState<any>(null);
 
   useEffect(() => {
     const fetchEventos = async () => {
       try {
         const res = await api.get("/eventos-rrhh");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const data = res.data.map((ev: any) => ({
           id: ev.id,
           title: ev.titulo,
@@ -143,6 +147,7 @@ export default function CalendarioPage() {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleGuardarEvento = async (evento: any) => {
     try {
       const payload = {
@@ -176,6 +181,7 @@ export default function CalendarioPage() {
       setEventos((prev) => [...prev, visual]);
       setModalOpen(false);
       toast.success("Evento guardado con éxito");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(
         "Error al guardar evento:",
@@ -258,28 +264,28 @@ export default function CalendarioPage() {
           <div className="p-4 h-full">
             {!loading && (
               <FullCalendar
-              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-              initialView="dayGridMonth"
-              locales={[esLocale]}
-              locale="es"
-              height="100%"
-              headerToolbar={{
-                left: "prev,next today",
-                center: "title",
-                right: "dayGridMonth,timeGridWeek,timeGridDay",
-              }}
-              events={eventos.map((e) => ({
-                ...e,
-                extendedProps: {
-                  descripcion: e.descripcion,
-                  empleado: e.empleado,
-                  tipo: e.tipo,
-                  estado: e.estado,
-                },
-                title: `${e.title}${e.empleado ? ` - ${e.empleado}` : ""}`,
-              }))}
-              eventClick={handleClickEvento}
-            />
+                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                initialView="dayGridMonth"
+                locales={[esLocale]}
+                locale="es"
+                height="100%"
+                headerToolbar={{
+                  left: "prev,next today",
+                  center: "title",
+                  right: "dayGridMonth,timeGridWeek,timeGridDay",
+                }}
+                events={eventos.map((e) => ({
+                  ...e,
+                  extendedProps: {
+                    descripcion: e.descripcion,
+                    empleado: e.empleado,
+                    tipo: e.tipo,
+                    estado: e.estado,
+                  },
+                  title: `${e.title}${e.empleado ? ` - ${e.empleado}` : ""}`,
+                }))}
+                eventClick={handleClickEvento}
+              />
             )}
           </div>
         </div>
@@ -379,16 +385,13 @@ export default function CalendarioPage() {
           </ul>
         </div>
       </div>
-      
-      
+
       {popoverData && (
         <EventoDetallePopover
           {...popoverData}
           onClose={() => setPopoverData(null)}
         />
       )}
-      
-      
 
       <EventoRRHHModal
         open={modalOpen}

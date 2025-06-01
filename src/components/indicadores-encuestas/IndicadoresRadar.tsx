@@ -1,4 +1,3 @@
-// components/indicadores-encuestas/IndicadoresRadar.tsx
 "use client";
 
 import {
@@ -11,6 +10,7 @@ import {
   Legend,
 } from "chart.js";
 import { Radar } from "react-chartjs-2";
+import { RespuestaEncuesta } from "@/types/encuestas";
 
 ChartJS.register(
   RadialLinearScale,
@@ -21,65 +21,76 @@ ChartJS.register(
   Legend
 );
 
-interface Props {
-  respuestas: any[];
+interface IndicadoresRadarProps {
+  respuestas: RespuestaEncuesta[];
 }
 
-export default function IndicadoresRadar({ respuestas }: Props) {
+export default function IndicadoresRadar({ respuestas }: IndicadoresRadarProps) {
   const calcularPromedio = (campo: string) => {
-    if (respuestas.length === 0) return 0;
-    const total = respuestas.reduce(
-      (sum, r) => sum + (r.respuestas?.[campo] || 0),
-      0
-    );
-    return +(total / respuestas.length).toFixed(1);
+    if (!Array.isArray(respuestas) || respuestas.length === 0) return 0;
+    const total = respuestas.reduce((sum, r) => {
+      const valor = r?.respuestas?.[campo];
+      return sum + (typeof valor === "number" ? valor : 0);
+    }, 0);
+    return +(total / respuestas.length).toFixed(2);
   };
 
+  const labels = [
+    "Trabajo Valorado",
+    "Claridad Objetivos",
+    "Recursos Disponibles",
+    "Oportunidades Desarrollo",
+  ];
+
+  const campos = [
+    "trabajoValorado",
+    "claridadObjetivos",
+    "recursosDisponibles",
+    "oportunidadesDesarrollo",
+  ];
+
+  const valores = campos.map((campo) => calcularPromedio(campo));
+
   const data = {
-    labels: [
-      "Trabajo Valorado",
-      "Claridad de Objetivos",
-      "Recursos Disponibles",
-      "Feedback y Opinión",
-      "Desarrollo Profesional",
-    ],
+    labels,
     datasets: [
       {
-        label: "Resultados Promedio",
-        data: [
-          calcularPromedio("trabajoValorado"),
-          calcularPromedio("claridadObjetivos"),
-          calcularPromedio("recursosDisponibles"),
-          calcularPromedio("comodidadFeedback"),
-          calcularPromedio("oportunidadesDesarrollo"),
-        ],
-        backgroundColor: "rgba(174, 163, 68, 0.3)",
-        borderColor: "#AEA344",
-        pointBackgroundColor: "#AEA344",
-        pointBorderColor: "#fff",
+        label: "Promedio por Indicador",
+        data: valores,
+        backgroundColor: "rgba(158, 134, 68, 0.2)",
+        borderColor: "#9E8644",
+        pointBackgroundColor: "#9E8644",
+        borderWidth: 2,
       },
     ],
   };
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false,
     scales: {
       r: {
-        angleLines: { display: true },
+        angleLines: { display: false },
         suggestedMin: 0,
         suggestedMax: 5,
         ticks: {
           stepSize: 1,
-          backdropColor: "transparent",
         },
+        pointLabels: {
+          font: {
+            size: 12,
+          },
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,
       },
     },
   };
 
   return (
-    <div className="bg-white p-4 rounded-2xl shadow-md" style={{ height: "350px" }}>
-      <h3 className="font-semibold text-lg text-gray-800 mb-4">Radar de Indicadores</h3>
+    <div className="bg-white p-4 rounded-2xl shadow-md h-[350px]">
       <Radar data={data} options={options} />
     </div>
   );

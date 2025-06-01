@@ -1,4 +1,3 @@
-// app/dashboard/encuesta/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -6,28 +5,26 @@ import { useState } from "react";
 import CulturaTable from "@/components/indicadores-encuestas/CulturaTable";
 import IndicadorCard from "@/components/indicadores-encuestas/IndicadorCard";
 import IndicadoresRadar from "@/components/indicadores-encuestas/IndicadoresRadar";
-//import InsightsTable from "@/components/indicadores-encuestas/InsightsTable";
-//import AlertasEstrategicas from "@/components/indicadores-encuestas/AlertasEstrategicas";
-//import RecomendacionesTable from "@/components/indicadores-encuestas/RecomendacionesTable";
 import IndicadoresLinea from "@/components/indicadores-encuestas/IndicadoresLine";
 import IndicadoresDonutDimensiones from "@/components/indicadores-encuestas/IndicadoresDonutDimensiones";
 import { ChartLine, ListFilter } from "lucide-react";
 import api from "@/lib/api";
+import { RespuestaEncuesta } from "@/types/encuestas";
 
 export default function EncuestaDashboardPage() {
   const [empresa, setEmpresa] = useState("");
   const [fechaDesde, setFechaDesde] = useState("");
   const [fechaHasta, setFechaHasta] = useState("");
   const [cantidad, setCantidad] = useState("");
-  const [respuestas, setRespuestas] = useState<any[]>([]);
+  const [respuestas, setRespuestas] = useState<RespuestaEncuesta[]>([]);
   const [mostrarInfo, setMostrarInfo] = useState(false);
 
   const handleEnviar = async () => {
     try {
       const res = await api.get("/respuesta-encuesta");
-      const data = res.data;
+      const data: RespuestaEncuesta[] = res.data;
 
-      const filtradas = data.filter((item: any) => {
+      const filtradas = data.filter((item: RespuestaEncuesta) => {
         const fecha = new Date(item.fecha);
         return (
           item.nombreEmpresa.toLowerCase() === empresa.toLowerCase() &&
@@ -55,7 +52,7 @@ export default function EncuestaDashboardPage() {
   const enpsPromedio = enpsPromedioNum.toFixed(1);
 
   const reconocimientoRaw = respuestas.filter(
-    (r) => r.respuestas.trabajoValorado >= 4
+    (r) => (r.respuestas.trabajoValorado ?? 0) >= 4
   ).length;
 
   const reconocimiento = respuestas.length
@@ -63,7 +60,7 @@ export default function EncuestaDashboardPage() {
     : "0%";
 
   const equilibrioRaw = respuestas.filter(
-    (r) => r.respuestas.equilibrioVidaLaboral >= 4
+    (r) => (r.respuestas.equilibrioVidaLaboral ?? 0) >= 4
   ).length;
 
   const equilibrio = respuestas.length
@@ -87,7 +84,7 @@ export default function EncuestaDashboardPage() {
       <div className="flex items-center gap-2">
         <ChartLine color="#6c5435" />
         <h2 className="text-2xl font-bold text-[#322616]">
-          Indicadores de Encuesta experiencia del colaborador
+          Indicadores de encuesta onboarding
         </h2>
       </div>
 
@@ -140,7 +137,7 @@ export default function EncuestaDashboardPage() {
           <label className="text-sm text-transparent mb-1">Aplicar</label>
           <button
             onClick={handleEnviar}
-            className="flex items-center gap-2 px-8 py-2 text-sm bg-[#AEA344] text-white rounded-md shadow-md hover:bg-[#8C8631]"
+            className="flex items-center gap-2 px-8 py-2 text-sm bg-[#AEA344] text-white rounded-md shadow-md hover:bg-[#8C8631] cursor-pointer"
           >
             <ListFilter />
             Aplicar
@@ -189,9 +186,6 @@ export default function EncuestaDashboardPage() {
             <IndicadoresLinea respuestas={respuestas} />
             <CulturaTable respuestas={respuestas} />
           </div>
-
-          {/* <RecomendacionesTable />
-          <InsightsTable /> */}
         </div>
       )}
     </div>

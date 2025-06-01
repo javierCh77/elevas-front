@@ -3,22 +3,51 @@
 import api from "@/lib/api";
 import { useForm, useFieldArray } from "react-hook-form";
 
+interface EncuestaFormData {
+  colaborador: {
+    nombre: string;
+    email: string;
+    cargo: string;
+    antiguedad: string;
+    empresa: string;
+  };
+  respuesta: {
+    recomiendaEmpresa: number;
+    satisfaccion: string;
+    tiempoEnEmpresa: string;
+    recomiendaProductos: number;
+  };
+  respuestasMultiples: {
+    pregunta: string;
+    opcion: string;
+  }[];
+  respuestasLikert: {
+    enunciado: string;
+    valor: string;
+  }[];
+  capacitacion: {
+    asistio: boolean;
+    utilidad: string;
+    deseaMas: string;
+    temasInteres: string[];
+  };
+}
 
 export default function EncuestaForm() {
-  const { register, handleSubmit, control, reset } = useForm({
+  const { register, handleSubmit, control, reset } = useForm<EncuestaFormData>({
     defaultValues: {
       colaborador: {
         nombre: "",
         email: "",
         cargo: "",
         antiguedad: "",
-        empresa: ""
+        empresa: "",
       },
       respuesta: {
         recomiendaEmpresa: 0,
         satisfaccion: "",
         tiempoEnEmpresa: "",
-        recomiendaProductos: 0
+        recomiendaProductos: 0,
       },
       respuestasMultiples: [],
       respuestasLikert: [],
@@ -26,29 +55,34 @@ export default function EncuestaForm() {
         asistio: false,
         utilidad: "",
         deseaMas: "",
-        temasInteres: []
-      }
-    }
+        temasInteres: ["", ""],
+      },
+    },
   });
 
   const { fields: multipleFields, append: appendMultiple } = useFieldArray({
     control,
-    name: "respuestasMultiples"
+    name: "respuestasMultiples",
   });
 
   const { fields: likertFields, append: appendLikert } = useFieldArray({
     control,
-    name: "respuestasLikert"
+    name: "respuestasLikert",
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: EncuestaFormData) => {
     try {
       const res = await api.post("/encuestas-colaboradores", data);
       alert("Encuesta enviada correctamente");
       reset();
       console.log("Respuesta del servidor:", res.data);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.error("Error al enviar encuesta", err.response?.status, err.response?.data || err.message);
+      console.error(
+        "Error al enviar encuesta",
+        err.response?.status,
+        err.response?.data || err.message
+      );
       alert("Error al enviar encuesta");
     }
   };

@@ -2,6 +2,7 @@
 
 import { Empleado } from "@/types/empleado";
 import { Users } from "lucide-react";
+import Image from "next/image";
 
 interface Props {
   open: boolean;
@@ -28,10 +29,12 @@ export default function EmpleadosDetalleModal({ open, empleado, onClose }: Props
           {/* Imagen */}
           <div className="col-span-1 flex justify-center items-start">
             {imageUrl ? (
-              <img
+              <Image
                 src={imageUrl}
                 alt="Foto de perfil"
-                className="rounded-lg max-h-52 object-contain border border-[#BCB563]"
+                width={180}
+                height={180}
+                className="rounded-lg border border-[#BCB563] object-contain h-auto max-h-52 w-auto"
               />
             ) : (
               <div className="text-sm italic text-gray-500">Sin imagen</div>

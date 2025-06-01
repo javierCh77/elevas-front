@@ -1,4 +1,3 @@
-// components/indicadores-encuestas/IndicadoresLine.tsx
 "use client";
 
 import {
@@ -10,11 +9,14 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { RespuestaEncuesta } from "@/types/encuestas";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
+
+
 interface IndicadoresLineaProps {
-  respuestas: any[];
+  respuestas: RespuestaEncuesta[];
 }
 
 export default function IndicadoresLinea({ respuestas }: IndicadoresLineaProps) {
@@ -22,7 +24,7 @@ export default function IndicadoresLinea({ respuestas }: IndicadoresLineaProps) 
 
   respuestas.forEach((r) => {
     const valor = r.respuestas.recomendariaEmpresa;
-    if (conteo[valor] !== undefined) {
+    if (valor && valor >= 1 && valor <= 5) {
       conteo[valor] += 1;
     }
   });

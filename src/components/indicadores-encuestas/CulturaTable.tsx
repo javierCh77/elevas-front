@@ -1,24 +1,32 @@
-// components/indicadores-encuestas/CulturaTable.tsx
 "use client";
 
 import { Info } from "lucide-react";
 
+interface RespuestaCultural {
+  id?: string;
+  nombre: string;
+  apellido: string;
+  respuestas: {
+    culturaUnaPalabra?: string;
+  };
+}
+
 interface CulturaTableProps {
-  respuestas: any[];
+  respuestas: RespuestaCultural[];
 }
 
 export default function CulturaTable({ respuestas }: CulturaTableProps) {
   const filas = respuestas.map((r, i) => ({
     id: r.id || i.toString(),
     colaborador: `${r.nombre} ${r.apellido.charAt(0)}.`,
-    cultura: r.respuestas.culturaUnaPalabra,
+    cultura: r.respuestas.culturaUnaPalabra || "Sin respuesta",
   }));
 
   return (
     <div className="bg-[#F8F8EE] rounded-2xl shadow-md p-4 overflow-x-auto">
       <h3 className="font-semibold text-lg mb-4 text-[#786530] flex items-center gap-2">
         Percepción de Cultura
-        <Info size={16} className="text-[#786530]" title="Percepción subjetiva del clima organizacional" />
+         <Info size={16} className="text-[#786530]" />
       </h3>
       <table className="w-full text-left">
         <thead className="bg-[#DEDFA9] text-[#322616]">

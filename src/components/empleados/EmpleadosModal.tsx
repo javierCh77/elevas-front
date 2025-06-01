@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { EmpleadoInput } from "@/types/empleado";
 import { Users } from "lucide-react";
 import api from "@/lib/api";
@@ -8,7 +9,7 @@ import api from "@/lib/api";
 interface Props {
   open: boolean;
   isEditing: boolean;
-  empleado?: EmpleadoInput & { imagenPerfil?: string };
+  empleado?: EmpleadoInput & { empresa?: { id: string } };
   onClose: () => void;
   onSave: (data: FormData) => void;
 }
@@ -22,7 +23,6 @@ const FORM_DEFAULT: EmpleadoInput = {
   direccion: "",
   imagenPerfil: null,
   empresaId: "",
- 
 };
 
 export default function EmpleadoModal({
@@ -44,7 +44,7 @@ export default function EmpleadoModal({
       setForm({
         ...FORM_DEFAULT,
         ...empleado,
-        empresaId: empleado?.empresa?.id ?? "",
+        empresaId: empleado?.empresa?.id ?? empleado?.empresaId ?? "",
       });
       setErrores({});
       setEliminarImagen(false);
@@ -133,7 +133,12 @@ export default function EmpleadoModal({
                 ref={campo === "nombre" ? nombreInputRef : undefined}
                 type="text"
                 name={campo}
-                value={form[campo as keyof EmpleadoInput] ?? ""}
+                value={
+                  typeof form[campo as keyof EmpleadoInput] === "string" ||
+                  typeof form[campo as keyof EmpleadoInput] === "number"
+                    ? String(form[campo as keyof EmpleadoInput])
+                    : ""
+                }
                 onChange={handleChange}
                 className={`border p-2 rounded bg-[#EEEED7] text-[#322616] placeholder:text-[#9B8444] ${
                   errores[campo as keyof EmpleadoInput] ? "border-red-400" : "border-[#BCB563]"
@@ -184,16 +189,20 @@ export default function EmpleadoModal({
               </label>
 
               {form.imagenPerfil instanceof File ? (
-                <img
+                <Image
                   src={URL.createObjectURL(form.imagenPerfil)}
                   alt="Vista previa"
+                  width={80}
+                  height={80}
                   className="h-20 mt-2 border border-[#BCB563] rounded object-cover"
                 />
               ) : previewUrl ? (
                 <div className="flex flex-col gap-2">
-                  <img
+                  <Image
                     src={previewUrl}
                     alt="Imagen actual"
+                    width={80}
+                    height={80}
                     className="h-20 border border-[#BCB563] rounded object-cover"
                   />
                   <button

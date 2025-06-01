@@ -1,4 +1,3 @@
-// components/indicadores-encuestas/IndicadoresDonutDimensiones.tsx
 "use client";
 
 import {
@@ -8,17 +7,21 @@ import {
   Legend,
 } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import { RespuestaEncuesta } from "@/types/encuestas";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface IndicadoresDonutProps {
-  respuestas: any[];
+  respuestas: RespuestaEncuesta[];
 }
 
 export default function IndicadoresDonutDimensiones({ respuestas }: IndicadoresDonutProps) {
   const calcularPromedio = (campo: string) => {
-    if (respuestas.length === 0) return 0;
-    const total = respuestas.reduce((sum, r) => sum + (r.respuestas?.[campo] || 0), 0);
+    if (!Array.isArray(respuestas) || respuestas.length === 0) return 0;
+    const total = respuestas.reduce((sum, r) => {
+      const valor = r?.respuestas?.[campo];
+      return sum + (typeof valor === "number" ? valor : 0);
+    }, 0);
     return +(total / respuestas.length).toFixed(2);
   };
 
@@ -38,12 +41,7 @@ export default function IndicadoresDonutDimensiones({ respuestas }: IndicadoresD
       {
         label: "Promedio por Dimensión",
         data: valores,
-        backgroundColor: [
-          "#F8F8EE",
-          "#DEDFA9",
-          "#AEA344",
-          "#958439",
-        ],
+        backgroundColor: ["#F8F8EE", "#DEDFA9", "#AEA344", "#958439"],
         borderColor: "#DEDFA9",
         borderWidth: 1,
       },

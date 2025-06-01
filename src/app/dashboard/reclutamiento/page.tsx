@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PlusCircle, FileDown, Factory, User } from "lucide-react";
+import { FileDown, Factory, User } from "lucide-react";
 import api from "@/lib/api";
 import toast from "react-hot-toast";
 import { Empresa, EmpresaInput } from "@/types/empresa";
