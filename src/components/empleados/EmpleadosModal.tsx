@@ -22,7 +22,6 @@ const FORM_DEFAULT: EmpleadoInput = {
   direccion: "",
   imagenPerfil: null,
   empresaId: "",
-  empresa: "",
  
 };
 

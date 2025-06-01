@@ -11,7 +11,7 @@ export interface Empleado {
   imagenPerfil?: string;
   empresaId: string;
   empresa?: Empresa; // 👈 asociación completa
- 
+
 }
 
 export interface EmpleadoInput {
@@ -24,4 +24,5 @@ export interface EmpleadoInput {
   imagenPerfil: File | null;
   empresaId: string;
   empresa?: Empresa; 
+  
 }
