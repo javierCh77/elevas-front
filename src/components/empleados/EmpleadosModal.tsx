@@ -48,20 +48,22 @@ export default function EmpleadoModal({
       });
       setErrores({});
       setEliminarImagen(false);
-
+  
       if (empleado?.imagenPerfil && typeof empleado.imagenPerfil === "string") {
-        setPreviewUrl(`http://localhost:3005${empleado.imagenPerfil}`);
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL?.replace("/api", "") || "";
+        setPreviewUrl(`${backendUrl}${empleado.imagenPerfil}`);
       } else {
         setPreviewUrl(null);
       }
-
+  
       api.get("/empresas").then((res) => setEmpresas(res.data));
-
+  
       setTimeout(() => {
         nombreInputRef.current?.focus();
       }, 100);
     }
   }, [open, empleado]);
+  
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

@@ -13,9 +13,12 @@ interface Props {
 export default function EmpleadosDetalleModal({ open, empleado, onClose }: Props) {
   if (!open || !empleado) return null;
 
-  const imageUrl = empleado.imagenPerfil
-    ? `http://localhost:3005${empleado.imagenPerfil}`
-    : null;
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL?.replace("/api", "") || "";
+
+  const imageUrl =
+    empleado.imagenPerfil && typeof empleado.imagenPerfil === "string"
+      ? `${backendUrl}${empleado.imagenPerfil}`
+      : null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">

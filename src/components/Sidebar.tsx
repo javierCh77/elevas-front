@@ -50,11 +50,11 @@ export default function Sidebar() {
           href: "/dashboard/encuestas/experiencia-colaborador",
           icon: null,
         },
-         {
-          label: "Onboarding",
-          href: "/dashboard/encuestas/onboarding",
-          icon: null,
-        },
+        //  {
+        //   label: "Onboarding",
+        //   href: "/dashboard/encuestas/onboarding",
+        //   icon: null,
+        // },
       ],
     },
     // {
