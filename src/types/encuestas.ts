@@ -8,7 +8,9 @@ export interface RespuestaEncuesta {
     equilibrioVidaLaboral?: number;
     culturaUnaPalabra?: string;
     claridadObjetivos?: number;
+    capacitacionesUtiles?:number;
     recursosDisponibles?: number;
+    opinionTenidaEnCuenta?:number;
     comodidadFeedback?: number;
     oportunidadesDesarrollo?: number;
     [key: string]: number | string | undefined;
