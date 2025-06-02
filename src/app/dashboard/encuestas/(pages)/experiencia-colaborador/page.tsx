@@ -137,7 +137,7 @@ export default function EncuestaDashboardPage() {
           <label className="text-sm text-transparent mb-1">Aplicar</label>
           <button
             onClick={handleEnviar}
-            className="flex items-center gap-2 px-8 py-2 text-sm bg-[#AEA344] text-white rounded-md shadow-md hover:bg-[#8C8631] cursor-pointer"
+            className="flex text-center  justify-center items-center gap-2 px-8 py-2 text-sm bg-[#AEA344] text-white rounded-md shadow-md hover:bg-[#8C8631] cursor-pointer"
           >
             <ListFilter />
             Aplicar
