@@ -16,27 +16,36 @@ interface IndicadoresDonutProps {
 }
 
 export default function IndicadoresDonutDimensiones({ respuestas }: IndicadoresDonutProps) {
-  const calcularPromedio = (campo: string) => {
+  const calcularPromedioDimension = (claves: string[]) => {
     if (!Array.isArray(respuestas) || respuestas.length === 0) return 0;
 
-    const total = respuestas.reduce((sum, r) => {
-      const rawValor = r?.respuestas?.[campo];
-      const valor = typeof rawValor === "string" ? parseFloat(rawValor) : rawValor;
-      return sum + (typeof valor === "number" && !isNaN(valor) ? valor : 0);
-    }, 0);
+    const totalPorEncuesta = respuestas.map((r) => {
+      const valores = claves.map((clave) => Number(r.respuestas[clave]) || 0);
+      const suma = valores.reduce((a, b) => a + b, 0);
+      return suma / claves.length;
+    });
 
-    return parseFloat((total / respuestas.length).toFixed(2));
+    const promedioTotal = totalPorEncuesta.reduce((a, b) => a + b, 0) / totalPorEncuesta.length;
+    return parseFloat(promedioTotal.toFixed(1));
   };
 
-  const labels = ["Clima", "Liderazgo", "Recursos", "Desarrollo"];
-  const campos = [
-    "trabajoValorado",
-    "claridadObjetivos",
-    "recursosDisponibles",
-    "oportunidadesDesarrollo",
+  const labels = [
+    "Clima Laboral",
+    "Liderazgo y Comunicación",
+    "Recursos y Beneficios",
+    "Desarrollo y Motivación",
+    "Reconocimiento"
   ];
 
-  const valores = campos.map((campo) => calcularPromedio(campo));
+  const camposPorDimension: string[][] = [
+    ["climaComodidadEquipo", "climaAmbienteSaludable", "climaEquilibrioVida"],
+    ["liderazgoInformacionClara", "liderazgoConfianzaDireccion", "liderazgoOpinionesEscuchadas"],
+    ["recursosSatisfaccionSalario", "recursosCompensacionJusta"],
+    ["desarrolloOportunidades", "desarrolloMotivacion", "desarrolloAporteSignificativo", "desarrolloContinuarEmpresa"],
+    ["reconocimientoValorado", "reconocimientoDisfruteTrabajo"]
+  ];
+
+  const valores = camposPorDimension.map((campos) => calcularPromedioDimension(campos));
 
   const data = {
     labels,
@@ -44,7 +53,7 @@ export default function IndicadoresDonutDimensiones({ respuestas }: IndicadoresD
       {
         label: "Promedio por Dimensión",
         data: valores,
-        backgroundColor: ["#F8F8EE", "#DEDFA9", "#AEA344", "#958439"],
+        backgroundColor: ["#F8F8EE", "#DEDFA9", "#AEA344", "#958439", "#C4B780"],
         borderColor: "#DEDFA9",
         borderWidth: 1,
       },
@@ -81,5 +90,4 @@ export default function IndicadoresDonutDimensiones({ respuestas }: IndicadoresD
       </div>
     </div>
   );
-  
 }

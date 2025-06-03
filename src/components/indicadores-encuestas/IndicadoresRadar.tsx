@@ -26,40 +26,43 @@ interface IndicadoresRadarProps {
 }
 
 export default function IndicadoresRadar({ respuestas }: IndicadoresRadarProps) {
-  const calcularPromedio = (campo: string) => {
+  const calcularPromedioDimension = (claves: string[]) => {
     if (!Array.isArray(respuestas) || respuestas.length === 0) return 0;
 
-    const total = respuestas.reduce((sum, r) => {
-      const rawValor = r?.respuestas?.[campo];
-      const valor = typeof rawValor === "string" ? parseFloat(rawValor) : rawValor;
-      return sum + (typeof valor === "number" && !isNaN(valor) ? valor : 0);
-    }, 0);
+    const totalPorEncuesta = respuestas.map((r) => {
+      const valores = claves.map((clave) => Number(r.respuestas[clave]) || 0);
+      const suma = valores.reduce((a, b) => a + b, 0);
+      return suma / claves.length;
+    });
 
-    return parseFloat((total / respuestas.length).toFixed(2));
+    const promedioTotal = totalPorEncuesta.reduce((a, b) => a + b, 0) / totalPorEncuesta.length;
+    return parseFloat(promedioTotal.toFixed(2));
   };
 
   const labels = [
-    "Trabajo Valorado",
-    "Claridad Objetivos",
-    "Recursos Disponibles",
-    "Oportunidades Desarrollo",
+    "Clima Laboral",
+    "Liderazgo y Comunicación",
+    "Recursos y Beneficios",
+    "Desarrollo y Motivación",
+    "Reconocimiento"
   ];
 
-  const campos = [
-    "trabajoValorado",
-    "claridadObjetivos",
-    "recursosDisponibles",
-    "oportunidadesDesarrollo",
+  const camposPorDimension: string[][] = [
+    ["climaComodidadEquipo", "climaAmbienteSaludable", "climaEquilibrioVida"],
+    ["liderazgoInformacionClara", "liderazgoConfianzaDireccion", "liderazgoOpinionesEscuchadas"],
+    ["recursosSatisfaccionSalario", "recursosCompensacionJusta"],
+    ["desarrolloOportunidades", "desarrolloMotivacion", "desarrolloAporteSignificativo", "desarrolloContinuarEmpresa"],
+    ["reconocimientoValorado", "reconocimientoDisfruteTrabajo"]
   ];
 
-  const valores = campos.map((campo) => calcularPromedio(campo));
-  console.log("VALORES CALCULADOS PARA EL RADAR", valores);
+  const valores = camposPorDimension.map((campos) => calcularPromedioDimension(campos));
+  console.log("VALORES RADAR DIMENSIONES", valores);
 
   const data = {
     labels,
     datasets: [
       {
-        label: "Promedio por Indicador",
+        label: "Promedio por Dimensión",
         data: valores,
         backgroundColor: "rgba(158, 134, 68, 0.2)",
         borderColor: "#9E8644",

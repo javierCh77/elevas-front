@@ -19,6 +19,31 @@ export default function EncuestaDashboardPage() {
   const [respuestas, setRespuestas] = useState<RespuestaEncuesta[]>([]);
   const [mostrarInfo, setMostrarInfo] = useState(false);
 
+  // 🔧 Normalizador de valores
+  const parseRespuestas = (respuestas: RespuestaEncuesta[]): RespuestaEncuesta[] => {
+    return respuestas.map((r) => {
+      const respuestasNormalizadas: { [key: string]: number | string } = {};
+
+      for (const key in r.respuestas) {
+        const valor = r.respuestas[key];
+
+        if (key === "culturaUnaPalabra") {
+          respuestasNormalizadas[key] = typeof valor === "string" ? valor : "";
+        } else if (key === "capacitacionesUtiles") {
+          respuestasNormalizadas[key] = valor === "true" ? 1 : 0;
+        } else if (valor !== undefined) {
+          respuestasNormalizadas[key] =
+            typeof valor === "string" ? parseInt(valor) : valor;
+        }
+      }
+
+      return {
+        ...r,
+        respuestas: respuestasNormalizadas,
+      };
+    });
+  };
+
   const handleEnviar = async () => {
     try {
       const res = await api.get("/respuesta-encuesta");
@@ -27,24 +52,24 @@ export default function EncuestaDashboardPage() {
       const filtradas = data.filter((item: RespuestaEncuesta) => {
         const fecha = new Date(item.fecha);
         return (
-          item.nombreEmpresa.toLowerCase() === empresa.toLowerCase() &&
+          (!empresa || item.nombreEmpresa.toLowerCase().includes(empresa.toLowerCase())) &&
           (!fechaDesde || fecha >= new Date(fechaDesde)) &&
           (!fechaHasta || fecha <= new Date(fechaHasta))
         );
       });
 
-      setRespuestas(filtradas);
-      if (empresa && cantidad) {
-        setMostrarInfo(true);
-      }
+      const normalizadas = parseRespuestas(filtradas);
+      setRespuestas(normalizadas);
+      setMostrarInfo(normalizadas.length > 0);
     } catch (error) {
       console.error("Error al obtener respuestas:", error);
     }
   };
 
+  // Indicadores principales
   const enpsPromedioNum = respuestas.length
     ? respuestas.reduce(
-        (sum, r) => sum + (r.respuestas.recomendariaEmpresa || 0),
+        (sum, r) => sum + (r.respuestas.recomendariaEmpresa ?? 0),
         0
       ) / respuestas.length
     : 0;
@@ -52,7 +77,7 @@ export default function EncuestaDashboardPage() {
   const enpsPromedio = enpsPromedioNum.toFixed(1);
 
   const reconocimientoRaw = respuestas.filter(
-    (r) => (r.respuestas.trabajoValorado ?? 0) >= 4
+    (r) => (r.respuestas.reconocimientoValorado ?? 0) >= 4
   ).length;
 
   const reconocimiento = respuestas.length
@@ -60,7 +85,7 @@ export default function EncuestaDashboardPage() {
     : "0%";
 
   const equilibrioRaw = respuestas.filter(
-    (r) => (r.respuestas.equilibrioVidaLaboral ?? 0) >= 4
+    (r) => (r.respuestas.climaEquilibrioVida ?? 0) >= 4
   ).length;
 
   const equilibrio = respuestas.length
@@ -88,6 +113,7 @@ export default function EncuestaDashboardPage() {
         </h2>
       </div>
 
+      {/* Filtros */}
       <div className="flex flex-col md:flex-row md:items-center md:gap-4 gap-2">
         <div className="flex flex-col w-full md:w-1/3">
           <label className="text-sm text-[#4B4B3D] mb-1">
@@ -122,7 +148,7 @@ export default function EncuestaDashboardPage() {
 
         <div className="flex flex-col w-full md:w-1/3">
           <label className="text-sm text-[#4B4B3D] mb-1">
-            Cantidad de personas
+            Cantidad de personas (opcional)
           </label>
           <input
             type="number"
@@ -137,7 +163,7 @@ export default function EncuestaDashboardPage() {
           <label className="text-sm text-transparent mb-1">Aplicar</label>
           <button
             onClick={handleEnviar}
-            className="flex text-center  justify-center items-center gap-2 px-8 py-2 text-sm bg-[#AEA344] text-white rounded-md shadow-md hover:bg-[#8C8631] cursor-pointer"
+            className="flex text-center justify-center items-center gap-2 px-8 py-2 text-sm bg-[#AEA344] text-white rounded-md shadow-md hover:bg-[#8C8631] cursor-pointer"
           >
             <ListFilter />
             Aplicar
@@ -145,6 +171,7 @@ export default function EncuestaDashboardPage() {
         </div>
       </div>
 
+      {/* Reporte */}
       {mostrarInfo && (
         <div className="animate-fade-in transition-opacity duration-500 opacity-100 space-y-6">
           <div className="bg-[#F8F8EE] border border-[#DEDFA9] rounded-xl p-4 shadow-sm">
@@ -161,7 +188,8 @@ export default function EncuestaDashboardPage() {
             <p className="text-sm text-[#4B4B3D]">
               Cantidad de personas encuestadas:{" "}
               <strong>
-                {respuestas.length}/{cantidad}
+                {respuestas.length}
+                {cantidad ? ` / ${cantidad}` : ""}
               </strong>
             </p>
           </div>
