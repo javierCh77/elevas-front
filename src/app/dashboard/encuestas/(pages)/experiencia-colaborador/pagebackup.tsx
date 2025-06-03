@@ -1,6 +1,8 @@
 // src/app/dashboard/EncuestaDashboardPage.tsx
 "use client";
+
 import { useState } from "react";
+
 import CulturaTable from "@/components/indicadores-encuestas/CulturaTable";
 import IndicadorCard from "@/components/indicadores-encuestas/IndicadorCard";
 import IndicadoresRadar from "@/components/indicadores-encuestas/IndicadoresRadar";
@@ -9,7 +11,10 @@ import IndicadoresDonutDimensiones from "@/components/indicadores-encuestas/Indi
 import { ChartLine, ListFilter } from "lucide-react";
 import api from "@/lib/api";
 import { RespuestaEncuesta } from "@/types/encuestas";
-import {calcularCompromiso, calcularSatisfaccionGeneral,} from "@/types/indicadores";
+import {
+  calcularCompromiso,
+  calcularSatisfaccionGeneral,
+} from "@/types/indicadores";
 import DiagnosticoResumen from "@/components/indicadores-encuestas/DiagnosticoResumen";
 import LeyendaIndicadores from "@/components/indicadores-encuestas/LeyendaIndicadores";
 
@@ -20,12 +25,11 @@ export default function EncuestaDashboardPage() {
   const [cantidad, setCantidad] = useState("");
   const [respuestas, setRespuestas] = useState<RespuestaEncuesta[]>([]);
   const [mostrarInfo, setMostrarInfo] = useState(false);
+
   const compromiso = calcularCompromiso(respuestas);
   const satisfaccion = calcularSatisfaccionGeneral(respuestas);
 
-  const parseRespuestas = (
-    respuestas: RespuestaEncuesta[]
-  ): RespuestaEncuesta[] => {
+  const parseRespuestas = (respuestas: RespuestaEncuesta[]): RespuestaEncuesta[] => {
     return respuestas.map((r) => {
       const respuestasNormalizadas: { [key: string]: number | string } = {};
 
@@ -57,8 +61,7 @@ export default function EncuestaDashboardPage() {
       const filtradas = data.filter((item: RespuestaEncuesta) => {
         const fecha = new Date(item.fecha);
         return (
-          (!empresa ||
-            item.nombreEmpresa.toLowerCase().includes(empresa.toLowerCase())) &&
+          (!empresa || item.nombreEmpresa.toLowerCase().includes(empresa.toLowerCase())) &&
           (!fechaDesde || fecha >= new Date(fechaDesde)) &&
           (!fechaHasta || fecha <= new Date(fechaHasta))
         );
@@ -76,7 +79,7 @@ export default function EncuestaDashboardPage() {
     ? respuestas.reduce(
         (sum, r) => sum + (r.respuestas.recomendariaEmpresa ?? 0),
         0
-      ) / respuestas.length
+     ) / respuestas.length
     : 0;
 
   const enpsPromedio = enpsPromedioNum.toFixed(1);
@@ -114,7 +117,7 @@ export default function EncuestaDashboardPage() {
       <div className="flex items-center gap-2">
         <ChartLine color="#6c5435" />
         <h2 className="text-2xl font-bold text-[#322616]">
-          Indicadores de encuesta Experiencia Colaborador
+          Indicadores de encuesta onboarding
         </h2>
       </div>
 
@@ -178,68 +181,53 @@ export default function EncuestaDashboardPage() {
 
       {/* Reporte */}
       {mostrarInfo && (
-       
-          <div className="animate-fade-in transition-opacity duration-500 opacity-100 space-y-6">
-            <div className="bg-[#F8F8EE] border border-[#DEDFA9] rounded-xl p-4 shadow-sm">
-              <h3 className="font-semibold text-[#4B4B3D] text-lg mb-2">
-                📊 Información del Reporte
-              </h3>
-              <p className="text-sm text-[#4B4B3D]">
-                Empresa: <strong>{empresa}</strong>
-              </p>
-              <p className="text-sm text-[#4B4B3D]">
-                Desde: <strong>{fechaDesde || "–"}</strong> hasta{" "}
-                <strong>{fechaHasta || "–"}</strong>
-              </p>
-              <p className="text-sm text-[#4B4B3D]">
-                Cantidad de personas encuestadas:{" "}
-                <strong>
-                  {respuestas.length}
-                  {cantidad ? ` / ${cantidad}` : ""}
-                </strong>
-              </p>
-            </div>
-            <LeyendaIndicadores />
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
-              <IndicadorCard title="eNPS Promedio" value={enpsPromedio} />
-              <IndicadorCard title="Reconocimiento" value={reconocimiento} />
-              <IndicadorCard
-                title="Equilibrio Vida-Trabajo"
-                value={equilibrio}
-              />
-              <IndicadorCard
-                title="Riesgo de Rotación"
-                value={riesgoRotacion}
-                description={riesgoDescripcion}
-              />
-              <IndicadorCard
-                title="Compromiso Organizacional"
-                value={compromiso.toFixed(1)}
-              />
-              <IndicadorCard
-                title="Satisfacción General"
-                value={satisfaccion.toFixed(1)}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <IndicadoresDonutDimensiones respuestas={respuestas} />
-              <IndicadoresRadar respuestas={respuestas} />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <IndicadoresLinea respuestas={respuestas} />
-              <CulturaTable respuestas={respuestas} />
-            </div>
-
-            <DiagnosticoResumen
-              compromiso={compromiso}
-              satisfaccion={satisfaccion}
-              enps={enpsPromedioNum}
-              riesgo={riesgoRotacion}
-            />
+        <div className="animate-fade-in transition-opacity duration-500 opacity-100 space-y-6">
+          <div className="bg-[#F8F8EE] border border-[#DEDFA9] rounded-xl p-4 shadow-sm">
+            <h3 className="font-semibold text-[#4B4B3D] text-lg mb-2">
+              📊 Información del Reporte
+            </h3>
+            <p className="text-sm text-[#4B4B3D]">
+              Empresa: <strong>{empresa}</strong>
+            </p>
+            <p className="text-sm text-[#4B4B3D]">
+              Desde: <strong>{fechaDesde || "–"}</strong> hasta{" "}
+              <strong>{fechaHasta || "–"}</strong>
+            </p>
+            <p className="text-sm text-[#4B4B3D]">
+              Cantidad de personas encuestadas: <strong>{respuestas.length}{cantidad ? ` / ${cantidad}` : ""}</strong>
+            </p>
           </div>
-      
+          <LeyendaIndicadores />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+            <IndicadorCard title="eNPS Promedio" value={enpsPromedio} />
+            <IndicadorCard title="Reconocimiento" value={reconocimiento} />
+            <IndicadorCard title="Equilibrio Vida-Trabajo" value={equilibrio} />
+            <IndicadorCard title="Riesgo de Rotación" value={riesgoRotacion} description={riesgoDescripcion}/>
+            <IndicadorCard title="Compromiso Organizacional" value={compromiso.toFixed(1)} />
+            <IndicadorCard title="Satisfacción General" value={satisfaccion.toFixed(1)} />
+          </div>
+          
+         
+
+
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <IndicadoresDonutDimensiones respuestas={respuestas} />
+            <IndicadoresRadar respuestas={respuestas} />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <IndicadoresLinea respuestas={respuestas} />
+            <CulturaTable respuestas={respuestas} />
+          </div>
+          
+          <DiagnosticoResumen
+            compromiso={compromiso}
+            satisfaccion={satisfaccion}
+            enps={enpsPromedioNum}
+            riesgo={riesgoRotacion}
+          />
+        </div>
       )}
     </div>
   );

@@ -101,3 +101,10 @@ body {
  .animate-fadeIn {
     animation: fadeIn 1.5s ease-out forwards;
   }
+  
+  
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+  }
