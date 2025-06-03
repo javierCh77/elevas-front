@@ -1,6 +1,7 @@
+// components/indicadores-encuestas/CulturaTable.tsx
 "use client";
 
-import { Info } from "lucide-react";
+import { Info, Star } from "lucide-react";
 
 interface RespuestaCultural {
   id?: string;
@@ -8,6 +9,7 @@ interface RespuestaCultural {
   apellido: string;
   respuestas: {
     culturaUnaPalabra?: string;
+    [key: string]: number | string | undefined;
   };
 }
 
@@ -16,12 +18,23 @@ interface CulturaTableProps {
 }
 
 export default function CulturaTable({ respuestas }: CulturaTableProps) {
+  const calcularPromedio = (r: RespuestaCultural) => {
+    const valores = Object.entries(r.respuestas)
+      .filter(([key, val]) => key !== "culturaUnaPalabra" && typeof val === "number")
+      .map(([_, val]) => val as number);
+    if (!valores.length) return 0;
+    const promedio = valores.reduce((a, b) => a + b, 0) / valores.length;
+    return Math.round(promedio);
+  };
+
   const filas = respuestas.map((r, i) => {
-    const palabra = r.respuestas.culturaUnaPalabra?.trim() || "";
+    const cultura = r.respuestas.culturaUnaPalabra?.trim() || "Sin respuesta";
+    const puntuacion = calcularPromedio(r);
     return {
       id: r.id || i.toString(),
       colaborador: `${r.nombre} ${r.apellido.charAt(0)}.`,
-      cultura: palabra !== "" ? palabra : "Sin respuesta",
+      cultura,
+      puntuacion,
     };
   });
 
@@ -36,31 +49,25 @@ export default function CulturaTable({ respuestas }: CulturaTableProps) {
           <tr>
             <th className="py-2 px-4">Colaborador</th>
             <th className="py-2 px-4">Cultura</th>
+            <th className="py-2 px-4">Puntuación</th>
           </tr>
         </thead>
         <tbody>
           {filas.map((row) => (
             <tr key={row.id} className="border-b border-[#ECEED3] hover:bg-[#ECEED3]">
               <td className="py-2 px-4 text-[#58462B]">{row.colaborador}</td>
+              <td className="py-2 px-4 text-[#322616]">{row.cultura}</td>
               <td className="py-2 px-4">
-                <span
-                  title={
-                    row.cultura.toLowerCase() === "colaborativa"
-                      ? "Ambiente de apoyo, comunicación abierta y cooperación."
-                      : row.cultura.toLowerCase() === "tóxica"
-                      ? "Ambiente negativo con tensiones, falta de confianza o comunicación."
-                      : "Percepción espontánea del colaborador."
-                  }
-                  className={`px-3 py-1 rounded-full text-sm font-medium cursor-default ${
-                    row.cultura.toLowerCase() === "colaborativa"
-                      ? "bg-[#DEDFA9] text-[#322616]"
-                      : row.cultura.toLowerCase() === "tóxica"
-                      ? "bg-[#F8DADA] text-[#322616]"
-                      : "bg-[#ECEED3] text-[#322616]"
-                  }`}
-                >
-                  {row.cultura}
-                </span>
+                <div className="flex gap-1 text-[#786530]">
+                  {[...Array(5)].map((_, idx) => (
+                    <Star
+                      key={idx}
+                      size={16}
+                      fill={idx < row.puntuacion ? "#AEA344" : "none"}
+                      stroke="#AEA344"
+                    />
+                  ))}
+                </div>
               </td>
             </tr>
           ))}

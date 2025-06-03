@@ -1,3 +1,4 @@
+// src/app/dashboard/EncuestaDashboardPage.tsx
 "use client";
 
 import { useState } from "react";
@@ -10,6 +11,12 @@ import IndicadoresDonutDimensiones from "@/components/indicadores-encuestas/Indi
 import { ChartLine, ListFilter } from "lucide-react";
 import api from "@/lib/api";
 import { RespuestaEncuesta } from "@/types/encuestas";
+import {
+  calcularCompromiso,
+  calcularSatisfaccionGeneral,
+} from "@/types/indicadores";
+import DiagnosticoResumen from "@/components/indicadores-encuestas/DiagnosticoResumen";
+import LeyendaIndicadores from "@/components/indicadores-encuestas/LeyendaIndicadores";
 
 export default function EncuestaDashboardPage() {
   const [empresa, setEmpresa] = useState("");
@@ -19,7 +26,9 @@ export default function EncuestaDashboardPage() {
   const [respuestas, setRespuestas] = useState<RespuestaEncuesta[]>([]);
   const [mostrarInfo, setMostrarInfo] = useState(false);
 
-  // 🔧 Normalizador de valores
+  const compromiso = calcularCompromiso(respuestas);
+  const satisfaccion = calcularSatisfaccionGeneral(respuestas);
+
   const parseRespuestas = (respuestas: RespuestaEncuesta[]): RespuestaEncuesta[] => {
     return respuestas.map((r) => {
       const respuestasNormalizadas: { [key: string]: number | string } = {};
@@ -66,12 +75,11 @@ export default function EncuestaDashboardPage() {
     }
   };
 
-  // Indicadores principales
   const enpsPromedioNum = respuestas.length
     ? respuestas.reduce(
         (sum, r) => sum + (r.respuestas.recomendariaEmpresa ?? 0),
         0
-      ) / respuestas.length
+     ) / respuestas.length
     : 0;
 
   const enpsPromedio = enpsPromedioNum.toFixed(1);
@@ -186,24 +194,22 @@ export default function EncuestaDashboardPage() {
               <strong>{fechaHasta || "–"}</strong>
             </p>
             <p className="text-sm text-[#4B4B3D]">
-              Cantidad de personas encuestadas:{" "}
-              <strong>
-                {respuestas.length}
-                {cantidad ? ` / ${cantidad}` : ""}
-              </strong>
+              Cantidad de personas encuestadas: <strong>{respuestas.length}{cantidad ? ` / ${cantidad}` : ""}</strong>
             </p>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <LeyendaIndicadores />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
             <IndicadorCard title="eNPS Promedio" value={enpsPromedio} />
             <IndicadorCard title="Reconocimiento" value={reconocimiento} />
             <IndicadorCard title="Equilibrio Vida-Trabajo" value={equilibrio} />
-            <IndicadorCard
-              title="Riesgo de Rotación"
-              value={riesgoRotacion}
-              description={riesgoDescripcion}
-            />
+            <IndicadorCard title="Riesgo de Rotación" value={riesgoRotacion} description={riesgoDescripcion}/>
+            <IndicadorCard title="Compromiso Organizacional" value={compromiso.toFixed(1)} />
+            <IndicadorCard title="Satisfacción General" value={satisfaccion.toFixed(1)} />
           </div>
+          
+         
+
+
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <IndicadoresDonutDimensiones respuestas={respuestas} />
@@ -214,6 +220,13 @@ export default function EncuestaDashboardPage() {
             <IndicadoresLinea respuestas={respuestas} />
             <CulturaTable respuestas={respuestas} />
           </div>
+          
+          <DiagnosticoResumen
+            compromiso={compromiso}
+            satisfaccion={satisfaccion}
+            enps={enpsPromedioNum}
+            riesgo={riesgoRotacion}
+          />
         </div>
       )}
     </div>
