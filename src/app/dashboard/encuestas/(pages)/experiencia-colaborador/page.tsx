@@ -31,24 +31,28 @@ export default function EncuestaDashboardPage() {
 
   const handleExportPDF = async () => {
     if (!printRef.current) return;
+  
     const canvas = await html2canvas(printRef.current, {
-      scale: 2, // mejora resolución
-      useCORS: true, // si hay imágenes externas
-      backgroundColor: "#ffffff", // evita transparencias
+      scale: 2, // mayor resolución
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      
       ignoreElements: (element) => {
         const style = window.getComputedStyle(element);
-        return style.color.includes("oklch");
+        return style.color.includes("oklch"); // evita errores de colores no soportados
       },
     });
-    
+  
     const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF("p", "mm", "a4");
     const imgProps = pdf.getImageProperties(imgData);
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  
     pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`reporte_encuesta_${empresa}.pdf`);
+    pdf.save(`reporte_encuesta_${empresa || "sin_nombre"}.pdf`);
   };
+  
   
   
   const parseRespuestas = (
@@ -213,8 +217,8 @@ export default function EncuestaDashboardPage() {
       </div>
       {/* Reporte */}
       {mostrarInfo && (
-       <div ref={printRef} className="w-[1200px] p-6 bg-white text-black space-y-6">
-          <div className="animate-fade-in transition-opacity duration-500 opacity-100 space-y-6">
+       
+          <div className="animate-fade-in transition-opacity duration-500 opacity-100 space-y-6" ref={printRef}>
             <div className="bg-[#F8F8EE] border border-[#DEDFA9] rounded-xl p-4 shadow-sm">
               <h3 className="font-semibold text-[#4B4B3D] text-lg mb-2">
                 📊 Información del Reporte
@@ -274,7 +278,7 @@ export default function EncuestaDashboardPage() {
               riesgo={riesgoRotacion}
             />
           </div>
-      </div>
+    
       )}
     </div>
   );
