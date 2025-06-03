@@ -8,6 +8,14 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        // Asegura que los colores sean hexadecimales y no usen `oklch`
+        primary: "#AEA344",
+        secondary: "#8C8631",
+        fondo: "#F8F8EE",
+        borde: "#DEDFA9",
+        texto: "#4B4B3D",
+      },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out',
       },

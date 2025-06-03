@@ -1,17 +1,21 @@
 // src/app/dashboard/EncuestaDashboardPage.tsx
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import CulturaTable from "@/components/indicadores-encuestas/CulturaTable";
 import IndicadorCard from "@/components/indicadores-encuestas/IndicadorCard";
 import IndicadoresRadar from "@/components/indicadores-encuestas/IndicadoresRadar";
 import IndicadoresLinea from "@/components/indicadores-encuestas/IndicadoresLine";
 import IndicadoresDonutDimensiones from "@/components/indicadores-encuestas/IndicadoresDonutDimensiones";
-import { ChartLine, ListFilter } from "lucide-react";
+import { ChartLine, ListFilter, Printer } from "lucide-react";
 import api from "@/lib/api";
 import { RespuestaEncuesta } from "@/types/encuestas";
 import {calcularCompromiso, calcularSatisfaccionGeneral,} from "@/types/indicadores";
 import DiagnosticoResumen from "@/components/indicadores-encuestas/DiagnosticoResumen";
 import LeyendaIndicadores from "@/components/indicadores-encuestas/LeyendaIndicadores";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+
+
 
 export default function EncuestaDashboardPage() {
   const [empresa, setEmpresa] = useState("");
@@ -22,7 +26,31 @@ export default function EncuestaDashboardPage() {
   const [mostrarInfo, setMostrarInfo] = useState(false);
   const compromiso = calcularCompromiso(respuestas);
   const satisfaccion = calcularSatisfaccionGeneral(respuestas);
+  const printRef = useRef<HTMLDivElement>(null);
 
+
+  const handleExportPDF = async () => {
+    if (!printRef.current) return;
+    const canvas = await html2canvas(printRef.current, {
+      scale: 2, // mejora resolución
+      useCORS: true, // si hay imágenes externas
+      backgroundColor: "#ffffff", // evita transparencias
+      ignoreElements: (element) => {
+        const style = window.getComputedStyle(element);
+        return style.color.includes("oklch");
+      },
+    });
+    
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`reporte_encuesta_${empresa}.pdf`);
+  };
+  
+  
   const parseRespuestas = (
     respuestas: RespuestaEncuesta[]
   ): RespuestaEncuesta[] => {
@@ -175,10 +203,17 @@ export default function EncuestaDashboardPage() {
           </button>
         </div>
       </div>
-
+      <div className="flex justify-end">
+        <button
+          onClick={handleExportPDF}
+          className="flex items-center gap-2 px-4 py-2 bg-[#AEA344] text-white rounded-md shadow-md hover:bg-[#8C8631]"
+        >
+          <Printer size={18} /> Exportar como PDF
+        </button>
+      </div>
       {/* Reporte */}
       {mostrarInfo && (
-       
+       <div ref={printRef} className="w-[1200px] p-6 bg-white text-black space-y-6">
           <div className="animate-fade-in transition-opacity duration-500 opacity-100 space-y-6">
             <div className="bg-[#F8F8EE] border border-[#DEDFA9] rounded-xl p-4 shadow-sm">
               <h3 className="font-semibold text-[#4B4B3D] text-lg mb-2">
@@ -239,7 +274,7 @@ export default function EncuestaDashboardPage() {
               riesgo={riesgoRotacion}
             />
           </div>
-      
+      </div>
       )}
     </div>
   );
