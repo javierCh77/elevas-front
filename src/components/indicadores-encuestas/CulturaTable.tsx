@@ -21,6 +21,7 @@ export default function CulturaTable({ respuestas }: CulturaTableProps) {
   const calcularPromedio = (r: RespuestaCultural) => {
     const valores = Object.entries(r.respuestas)
       .filter(([key, val]) => key !== "culturaUnaPalabra" && typeof val === "number")
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .map(([_, val]) => val as number);
     if (!valores.length) return 0;
     const promedio = valores.reduce((a, b) => a + b, 0) / valores.length;
