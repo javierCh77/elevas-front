@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PlusCircle, FileDown, Users } from "lucide-react";
+import { PlusCircle, FileDown, Users, FileText } from "lucide-react";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
 import CandidatoTable from "@/components/candidatos/CandidatoTable";
@@ -9,17 +9,22 @@ import CandidatoModal from "@/components/candidatos/CandidatoModal";
 import FichaCandidatoModal from "@/components/candidatos/FichaCandidatoModal";
 import * as XLSX from "xlsx";
 import { Candidato, CandidatoInput } from "@/types/candidato";
+import UploadCVModal from "@/components/candidatos/UploadCVModal";
 
 export default function CandidatosPage() {
   const [candidatos, setCandidatos] = useState<Candidato[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [candidatoEnEdicion, setCandidatoEnEdicion] = useState<CandidatoInput | undefined>(undefined);
+  const [candidatoEnEdicion, setCandidatoEnEdicion] = useState<
+    CandidatoInput | undefined
+  >(undefined);
   const [editId, setEditId] = useState<string | null>(null);
 
-  const [candidatoSeleccionado, setCandidatoSeleccionado] = useState<Candidato | null>(null);
+  const [candidatoSeleccionado, setCandidatoSeleccionado] =
+    useState<Candidato | null>(null);
   const [modalFichaAbierto, setModalFichaAbierto] = useState(false);
+  const [modalCVOpen, setModalCVOpen] = useState(false);
 
   useEffect(() => {
     fetchCandidatos();
@@ -116,7 +121,15 @@ export default function CandidatosPage() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
+          <button
+            className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-1 rounded-lg flex items-center gap-2"
+            onClick={() => setModalCVOpen(true)}
+          >
+            <FileText size={18} />
+            Cargar CV con IA
+          </button>
+
           <button
             className="bg-[#9B8444] hover:bg-[#B1A14F] text-white px-4 py-1 rounded-lg flex items-center gap-2 cursor-pointer"
             onClick={() => {
@@ -161,6 +174,12 @@ export default function CandidatosPage() {
           candidato={candidatoSeleccionado}
         />
       )}
+
+      <UploadCVModal
+        open={modalCVOpen}
+        onClose={() => setModalCVOpen(false)}
+        onCandidatoCreado={fetchCandidatos}
+      />
     </div>
   );
 }
