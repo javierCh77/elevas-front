@@ -38,6 +38,7 @@ export default function Sidebar() {
 
   const links: SidebarLink[] = [
     { label: "Inicio", icon: <Home size={20} />, href: "/dashboard" },
+    { label: "Candidatos", icon: <Factory size={20} />, href: "/dashboard/candidatos" },
     { label: "Empresas", icon: <Factory size={20} />, href: "/dashboard/empresas" },
     { label: "Empleados", icon: <PersonStanding size={20} />, href: "/dashboard/empleados" },
     { label: "Calendario", icon: <CalendarDays size={20} />, href: "/dashboard/calendario" },
