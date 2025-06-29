@@ -65,7 +65,7 @@ export default function CandidatoTable({ candidatos, onEdit, onDelete, onView }:
             <th className="p-2">Pretensión</th>
             <th className="p-2">Disponibilidad</th>
             <th className="p-2">CV</th>
-            <th className="p-2 text-right">Acciones</th>
+            <th className="p-2 text-center">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -110,13 +110,13 @@ export default function CandidatoTable({ candidatos, onEdit, onDelete, onView }:
                 </td>
                 <td className="p-2 text-right">
                   <div className="flex justify-end gap-2">
-                    <button onClick={() => onView(c)} className="text-gray-600 hover:text-gray-800">
+                    <button onClick={() => onView(c)} className="text-gray-600 hover:text-gray-800 cursor-pointer">
                       <Info size={16} />
                     </button>
-                    <button onClick={() => onEdit(c)} className="text-blue-600 hover:text-blue-800">
+                    <button onClick={() => onEdit(c)} className="text-blue-600 hover:text-blue-800 cursor-pointer">
                       <Pencil size={16} />
                     </button>
-                    <button onClick={() => onDelete(c.id)} className="text-red-600 hover:text-red-800">
+                    <button onClick={() => onDelete(c.id)} className="text-red-600 hover:text-red-800 cursor-pointer">
                       <Trash2 size={16} />
                     </button>
                     <button
