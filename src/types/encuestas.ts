@@ -1,6 +1,7 @@
 export interface RespuestaEncuesta {
   id: string;
   nombreEmpresa: string;
+  areaTrabajo: string; // ✅ agregar esta línea
   fecha: string;
   nombre: string;
   apellido: string;
